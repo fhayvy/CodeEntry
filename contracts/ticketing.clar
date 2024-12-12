@@ -9,6 +9,31 @@
 (define-constant ERR-TICKET-ALREADY-MINTED (err u101))
 (define-constant ERR-TICKET-NOT-FOUND (err u102))
 (define-constant ERR-UNAUTHORIZED-TRANSFER (err u103))
+(define-constant ERR-INVALID-INPUT (err u104))
+(define-constant ERR-CAPACITY-EXCEEDED (err u105))
+
+;; Input Validation Functions
+(define-private (is-valid-event-name (name (string-ascii 100)))
+  (and 
+    (> (len name) u0) 
+    (<= (len name) u100)
+  )
+)
+
+(define-private (is-valid-event-date (date (string-ascii 50)))
+  (and 
+    (> (len date) u0) 
+    (<= (len date) u50)
+  )
+)
+
+(define-private (is-valid-ticket-price (price uint))
+  (> price u0)
+)
+
+(define-private (is-valid-max-capacity (capacity uint))
+  (> capacity u0)
+)
 
 ;; Storage
 (define-map ticket-metadata 
@@ -40,6 +65,12 @@
   (max-capacity uint)
 )
   (begin
+    ;; Validate inputs
+    (asserts! (is-valid-event-name event-name) ERR-INVALID-INPUT)
+    (asserts! (is-valid-event-date event-date) ERR-INVALID-INPUT)
+    (asserts! (is-valid-ticket-price ticket-price) ERR-INVALID-INPUT)
+    (asserts! (is-valid-max-capacity max-capacity) ERR-INVALID-INPUT)
+    
     ;; Ensure ticket hasn't been minted before
     (asserts! (is-none (get-ticket-metadata ticket-id)) ERR-TICKET-ALREADY-MINTED)
     
@@ -67,7 +98,7 @@
       ;; Check if ticket sales haven't exceeded max capacity
       (asserts! 
         (< (get current-sales ticket-info) (get max-capacity ticket-info)) 
-        (err u104)
+        ERR-CAPACITY-EXCEEDED
       )
       
       ;; Transfer ticket price (simplified - would integrate with STX transfer)
