@@ -1,62 +1,99 @@
-# CodeEntry: NFT-Based Event Ticketing Platform
+# CodeEntry: Decentralized Event Ticketing Platform
 
 ## Overview
-CodeEntry is a decentralized event ticketing platform built on the Stacks blockchain, leveraging Clarity smart contracts to provide secure, transparent, and transferable event tickets.
 
-## Features
-- Mint unique event tickets as NFTs
-- Prevent ticket fraud through blockchain verification
-- Enable easy ticket transfers
-- Track ticket sales and event capacity
-- Transparent and immutable ticket metadata
+CodeEntry is a blockchain-powered event ticketing platform built on the Stacks blockchain using Clarity smart contracts. The platform provides a secure, transparent, and flexible solution for event ticket management through non-fungible tokens (NFTs).
+
+## Key Features
+
+- **Unique NFT Tickets**: Each event ticket is minted as a distinct, verifiable non-fungible token
+- **Fraud Prevention**: Blockchain-based verification ensures ticket authenticity
+- **Flexible Ticket Management**:
+  - Easy ticket transfers between users
+  - Transparent sales tracking
+  - Event cancellation and refund mechanisms
+- **Immutable Event Metadata**: Secure and unchangeable ticket information
 
 ## Smart Contract Functions
 
-### `mint-ticket`
-- Create a new event ticket with metadata
-- Set event name, date, price, and maximum capacity
-- Mints initial ticket to contract owner
+### Event Creation and Management
+- `mint-ticket`: Create new event tickets with comprehensive metadata
+  - Set event name, date, price, and maximum capacity
+  - Initial ticket minted to contract owner
+- `update-event-details`: Modify event details before ticket sales begin
+  - Change event name, date, and ticket price
+  - Restricted to contract owner
+  - Prevents updates after tickets are sold
 
-### `purchase-ticket`
-- Allow users to purchase tickets
-- Verify ticket availability
-- Transfer ticket price to event organizer
-- Mint ticket NFT to purchaser
+### Ticket Purchasing and Transfer
+- `purchase-ticket`: User-friendly ticket acquisition
+  - Verify ticket availability
+  - Check event capacity
+  - Transfer ticket price to event organizer
+  - Mint ticket NFT to purchaser
+- `transfer-ticket`: Seamless ticket ownership transfer
+  - Ensure transfers only by current ticket owners
+  - Preserve ticket metadata integrity
 
-### `transfer-ticket`
-- Enable ticket owners to transfer tickets to other users
-- Ensure only current ticket owner can transfer
-- Preserve ticket metadata during transfer
+### Event Control
+- `cancel-event`: Provide flexibility for event organizers
+  - Cancel events before or after ticket sales
+  - Enable refund mechanisms
+- `refund-ticket`: User protection for cancelled events
+  - Burn ticket NFT
+  - Refund ticket price to original purchaser
 
-## Technical Details
-- Blockchain: Stacks
-- Smart Contract Language: Clarity
-- Token Standard: Non-Fungible Token (NFT)
+## Technical Specifications
 
-## Installation
+- **Blockchain**: Stacks
+- **Smart Contract Language**: Clarity
+- **Token Standard**: Non-Fungible Token (NFT)
+- **Supported Ticket Metadata**:
+  - Unique Ticket ID
+  - Event Name
+  - Event Date
+  - Ticket Price
+  - Maximum Capacity
+  - Current Sales Tracking
+
+## Security Measures
+
+- Robust input validation
+- Prevent duplicate ticket minting
+- Restrict ticket transfers to current owners
+- Transparent and immutable sales tracking
+- Event cancellation and refund protections
+
+## Installation and Deployment
 
 ### Prerequisites
 - Stacks Wallet
 - Hiro Web Wallet
 - Basic understanding of Clarity smart contracts
 
-### Deployment
-1. Clone the repository
-2. Deploy smart contract to Stacks testnet/mainnet
-3. Integrate with frontend application
+### Deployment Steps
+1. Clone the project repository
+2. Review and test smart contract on Stacks testnet
+3. Deploy contract to Stacks mainnet
+4. Integrate with frontend application
+5. Configure wallet connections
 
-## Security
-- Built-in checks to prevent duplicate ticket minting
-- Ticket transfer restricted to current owners
-- Transparent sales tracking
-- Immutable event metadata
+## Roadmap and Future Enhancements
 
-## Future Roadmap
-- Add more advanced ticketing features
-- Implement dynamic pricing
-- Create marketplace for ticket resale
+- Implement dynamic ticket pricing
+- Develop ticket resale marketplace
 - Add event check-in verification
+- Support multi-event ticket management
+- Enhance refund and transfer mechanisms
 
 ## Contributing
-Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Submit a pull request
+
+Please adhere to our coding standards and include appropriate tests for new features.
 
