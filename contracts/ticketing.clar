@@ -13,6 +13,7 @@
 (define-constant ERR-CAPACITY-EXCEEDED (err u105))
 (define-constant ERR-EVENT-ALREADY-CANCELLED (err u106))
 (define-constant ERR-REFUND-FAILED (err u107))
+(define-constant ERR-TICKETS-ALREADY-SOLD (err u108))
 
 ;; Input Validation Functions
 (define-private (is-valid-event-name (name (string-ascii 100)))
@@ -100,6 +101,42 @@
     (nft-mint? codeentry-ticket ticket-id CONTRACT-OWNER)
   )
 )
+
+;; Update Event Details
+(define-public (update-event-details
+  (ticket-id (string-ascii 100))
+  (new-event-name (string-ascii 100))
+  (new-event-date (string-ascii 50))
+  (new-ticket-price uint)
+)
+  (let ((ticket-info (unwrap! (get-ticket-metadata ticket-id) ERR-TICKET-NOT-FOUND)))
+    (begin
+      ;; Ensure only contract owner can update
+      (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+      
+      ;; Prevent updates after tickets have been sold
+      (asserts! (is-eq (get current-sales ticket-info) u0) ERR-TICKETS-ALREADY-SOLD)
+      
+      ;; Validate new inputs
+      (asserts! (is-valid-event-name new-event-name) ERR-INVALID-INPUT)
+      (asserts! (is-valid-event-date new-event-date) ERR-INVALID-INPUT)
+      (asserts! (is-valid-ticket-price new-ticket-price) ERR-INVALID-INPUT)
+      
+      ;; Update ticket metadata
+      (map-set ticket-metadata 
+        {ticket-id: ticket-id}
+        (merge ticket-info {
+          event-name: new-event-name,
+          event-date: new-event-date,
+          ticket-price: new-ticket-price
+        })
+      )
+      
+      (ok true)
+    )
+  )
+)
+
 
 ;; Purchase ticket
 (define-public (purchase-ticket (ticket-id (string-ascii 100)))
