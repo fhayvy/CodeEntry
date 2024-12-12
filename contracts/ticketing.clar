@@ -14,6 +14,7 @@
 (define-constant ERR-EVENT-ALREADY-CANCELLED (err u106))
 (define-constant ERR-REFUND-FAILED (err u107))
 (define-constant ERR-TICKETS-ALREADY-SOLD (err u108))
+(define-constant ERR-INVALID-TRANSFER-RECIPIENT (err u109))
 
 ;; Input Validation Functions
 (define-private (is-valid-event-name (name (string-ascii 100)))
@@ -36,6 +37,11 @@
 
 (define-private (is-valid-max-capacity (capacity uint))
   (> capacity u0)
+)
+
+;; Principal Validation Function
+(define-private (is-valid-principal (addr principal))
+  (not (is-eq addr CONTRACT-OWNER))
 )
 
 ;; Storage
@@ -137,7 +143,6 @@
   )
 )
 
-
 ;; Purchase ticket
 (define-public (purchase-ticket (ticket-id (string-ascii 100)))
   (let ((ticket-info (unwrap! (get-ticket-metadata ticket-id) ERR-TICKET-NOT-FOUND)))
@@ -178,6 +183,9 @@
   (new-owner principal)
 )
   (begin
+    ;; Validate transfer recipient
+    (asserts! (is-valid-principal new-owner) ERR-INVALID-TRANSFER-RECIPIENT)
+    
     ;; Ensure only current ticket owner can transfer
     (asserts! 
       (is-eq tx-sender (unwrap! (nft-get-owner? codeentry-ticket ticket-id) ERR-TICKET-NOT-FOUND)) 
